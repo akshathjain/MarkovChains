@@ -6,7 +6,8 @@ import numpy as np;
 
 #main function
 def main():
-	x = rank([[1,3,4],[0,2,4],[3,6],[2,4,6],[5,8],[4,6,8],[0,7,9],[0,6,8],[2,9],[0,2,8]]);	
+	adjList = [[1, 2],[0],[],[1, 2]];
+	x = rank(adjList);	
 	print(x);
 
 #does the heavy lifting
@@ -65,8 +66,8 @@ def rank(ranks):
 	#==========================================================
 
 	#final vector is the result
-	v = np.argsort(v.flatten()); #sort in asceding order
-	v = list(reversed(v.tolist()[0])); #reverse to descending order
+	sort = np.argsort(v.flatten()); #sort in asceding order
+	sort = list(reversed(sort.tolist()[0])); #reverse to descending order
 
 	#fin.
-	return v;
+	return sort;
