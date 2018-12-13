@@ -12,10 +12,12 @@ def main():
 #does the heavy lifting
 def rank(ranks):
 
+	#=========================================
 	#(1) CREATE MATRIX REPRESENTING PAGE LINKS
+	#=========================================
 
 	#initialize nxn matrix full of zeros
-	matrix = [[0 for i in range(0, len(ranks))] for j in range(0, len(ranks))]; 
+	M = [[0 for i in range(0, len(ranks))] for j in range(0, len(ranks))]; 
 
 	#also need to transpose the give matrix
 	for i in range(0, len(ranks)):
@@ -23,32 +25,48 @@ def rank(ranks):
 		#assign equal probability to go to every other node (1/n)
 		if len(ranks[i]) == 0:
 			for j in range(0, len(ranks)):
-				matrix[j][i] = 1.0 / len(ranks);
+				M[j][i] = 1.0 / len(ranks);
 		else:
 			for j in range(0, len(ranks[i])):
-				matrix[ranks[i][j]][i] = 1.0 / len(ranks[i]); #probability from one node to all other nodes
+				M[ranks[i][j]][i] = 1.0 / len(ranks[i]); #probability from one node to all other nodes
 
+	M = np.matrix(M);
+
+
+	#------------------------------
+	#(1A) HANDLING REDUCIBLE GRAPHS
+	#------------------------------
 
 	#convert to a numpy matrix
-	matrix = np.matrix(matrix);
+	O = np.matrix([[1 for i in range(0, len(ranks))] for j in range(0, len(ranks))]); # nxn matrix full of ones
+	d = 0.15 #standard value for damping factor, (will change answers for test case)
+	M = d * M + (1.0 - d) / len(M) * O; #dampen M
 
 
+
+	
+	#==================
 	#(2) DO POWERMETHOD
+	#==================
 
 	v = np.array([[1 for i in range(0, len(ranks))]]).transpose();
 
 	#iterate until convergence or until 1000 iterations (so it doesn't take too long)
 	numIterations = 0
-	while(not np.array_equal(np.dot(matrix, v), v) and numIterations < 1000):
-		v = np.dot(matrix, v);
+	while(not np.array_equal(np.dot(M, v), v) and numIterations < 1000):
+		v = np.dot(M, v);
 		numIterations = numIterations + 1;
 
 	
+
+
+	#==========================================================
 	#(3) CLEAN UP THE OUTPUT TO A SORTED (by index) PYTHON LIST
+	#==========================================================
 
 	#final vector is the result
 	v = np.argsort(v.flatten()); #sort in asceding order
 	v = list(reversed(v.tolist()[0])); #reverse to descending order
 
-	#done
+	#fin.
 	return v;
