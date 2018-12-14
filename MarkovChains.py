@@ -1,6 +1,6 @@
-#Name: Akshath Jain
-#Date: 11/25/18
-#Purpose: spectral clustering algorithm for 21241 final project
+#Name: Akshath Jain & Deepayan Patra
+#Date: 11/25/18 - 12/14/18
+#Purpose: markov chains algorithm for pagerank; 21241 final project
 
 import numpy as np;
 
