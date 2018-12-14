@@ -20,9 +20,9 @@ def rank(ranks):
 	#initialize nxn matrix full of zeros
 	M = [[0 for i in range(0, len(ranks))] for j in range(0, len(ranks))]; 
 
-	#also need to transpose the give matrix
+	#also need to transpose the given matrix
 	for i in range(0, len(ranks)):
-		#if a node as no outgoing connections, 
+		#if a node has no outgoing connections, 
 		#assign equal probability to go to every other node (1/n)
 		if len(ranks[i]) == 0:
 			for j in range(0, len(ranks)):
@@ -40,7 +40,7 @@ def rank(ranks):
 
 	#convert to a numpy matrix
 	O = np.matrix([[1 for i in range(0, len(ranks))] for j in range(0, len(ranks))]); # nxn matrix full of ones
-	d = 0.15 #standard value for damping factor, (will change answers for test case)
+	d = 0.85 #standard value for damping factor, (will change answers for test case)
 	M = d * M + (1.0 - d) / len(M) * O; #dampen M
 
 
@@ -66,7 +66,7 @@ def rank(ranks):
 	#==========================================================
 
 	#final vector is the result
-	sort = np.argsort(v.flatten()); #sort in asceding order
+	sort = np.argsort(v.flatten()); #sort in ascending order
 	sort = list(reversed(sort.tolist()[0])); #reverse to descending order
 
 	#fin.
