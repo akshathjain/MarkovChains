@@ -6,7 +6,7 @@ import numpy as np;
 
 #main function
 def main():
-	adjList = [[1, 2],[0],[],[1, 2]];
+	adjList = [[1, 2],[0],[],[1, 2]]; #input, replace with new 2d array to test
 	x = rank(adjList);	
 	print(x);
 
@@ -40,7 +40,7 @@ def rank(ranks):
 
 	#convert to a numpy matrix
 	O = np.matrix([[1 for i in range(0, len(ranks))] for j in range(0, len(ranks))]); # nxn matrix full of ones
-	d = 0.85 #standard value for damping factor, (will change answers for test case)
+	d = 0.85 #standard value for damping factor, (will change answers for test case), can be changed as required (for testing)
 	M = d * M + (1.0 - d) / len(M) * O; #dampen M
 
 
