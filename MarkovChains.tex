@@ -81,74 +81,44 @@
 
 \maketitle
 
-\section{Overview}
-<Comments> 
-add comment in main that say adjList is initial input of links given
-State that damping factor d can be changed based on case being considered
-Could you my name to top of code, change the date, fix purpose to new project
-Review things i wrote once make sure they make sense lol
-</Comments>
-
-
-Describe Page-Rank, what it does, its relation to Markov Chains
-Describe purpose of Page-Rank
-Expand to other applications of markov chain models:
-See this source:
-%https://projecteuclid.org/download/pdfview_1/euclid.ps/1208958281
-Cite this source (thx):
-%http://mathworld.wolfram.com/MarkovChain.html
-Just do some of the below:
-
-For the Kids: Snakes and Ladders
-%https://scipython.com/book/chapter-6-numpy/additional-problems/analysing-snakes-and-ladders-as-a-markov-chain/
-High-School Example: Populations and Predator-Prey Relationships
-%http://acadpubl.eu/jsi/2017-117-11-14/articles/11/35.pdf
-
-Markov-Chain Monte Carlo Methods
-%https://towardsdatascience.com/a-zero-math-introduction-to-markov-chain-monte-carlo-methods-dcba889e0c50
-
-Chemical Reaction Mechanisms
-%3.3 in Euclid
-
-Differential Equations
-%5.1 in Euclid
-
-\section{A Brief History of Markov Chains and Page-Rank}
-Might want to combine this section with previous.
+\section{Overview \& History of PageRank}
+Invented by Andrei Markov and published in 1906, Markov Chains are collections of random variables that have the explicit property that given the present, the future is conditionally independent of the past.$^{[1]}$ With this mathematical construct, Google co-founders Larry Page and Sergey Brin proposed that Markov Chains could be used to efficiently rank the popularity, relevance, and legitimacy of web pages. Deployed in 1998, this PageRank algorithm was far superior and more efficient than other approaches, which propelled Google to the forefront of search.$^{[2]}$ This paper analyzes the fundamental aspects of the PageRank algorithm. 
+\\\\
+Beyond PageRank, Markov Chains have many applications across all fields, including biology, finance, and game theory. Specifically, this can be used for Credit Risk Management whereby Markov Chains are used to ``describe the probabilities that a certain company, country, etc. will either remain in their current state, or transition into a new state.''$^{[3]}$ Similarly, Markov Chains can be used to predict future stock market conditions; while the stock market is volatile by nature, an approach using Markov Chains can be used to give greater insight into financial trends.$^{[3]}$
 
 \section{Referenced Definitions and Theorems}
     This section outlines major definitions and theorems referenced throughout the rest of the paper.
     \subsection{Definitions}
     
-    \begin{definition}{Web Graph$^{[]}$ SHUM}
+    \begin{definition}{Web Graph$^{[4]}$}
     
     \noindent
     \textup{A web graph is directed graph representation of interconnected states such that individual states are represented as nodes and possible ordered changes in state are represented as directed edges from one node to the next according to a probabilistic model.}
     
     \end{definition}
     
-    \begin{definition}{Transition/Stochastic Matrix$^{[]}$ LAY ROUSSEAU SHUM WOLFRAMSTOCHASTIC}
+    \begin{definition}{Transition/Stochastic Matrix$^{[4], [5], [6], [7]}$}
     
     \noindent
-    \textup{An $n \times n$ stochastic matrix $P$ contains entries representing the probability that a change in state occurs from one state to another. Specifically, the $P_{ij}$ entry of the matrix, the entry in the $i^\text{th}$ row and the $j^\text{th}$ column, determines the probability that an input will change to state $i$ given that the input starts at state $j$. In other words, ``$p_{ij}$ is the conditional probability that we are on the $i$-th page at step $n+1$ given that we were on the $j$-th page at step $n$'', with $p_{ij}$ equivalent to the $P_{ij}$ entry.$^{[]}$ ROUSSEAU Thus, each term in matrix is greater than or equal to 0, and in a normal transition matrix, the sum of the terms in each column add to 1 as the rows of the matrix construct the sample space for the possible change of states (and the probabilities over a sample space sum to 1).}
+    \textup{An $n \times n$ stochastic matrix $P$ contains entries representing the probability that a change in state occurs from one state to another. Specifically, the $P_{ij}$ entry of the matrix, the entry in the $i^\text{th}$ row and the $j^\text{th}$ column, determines the probability that an input will change to state $i$ given that the input starts at state $j$. In other words, ``$p_{ij}$ is the conditional probability that we are on the $i$-th page at step $n+1$ given that we were on the $j$-th page at step $n$'', with $p_{ij}$ equivalent to the $P_{ij}$ entry.$^{[6]}$ Thus, each term in matrix is greater than or equal to 0, and in a normal transition matrix, the sum of the terms in each column add to 1 as the rows of the matrix construct the sample space for the possible change of states (and the probabilities over a sample space sum to 1).}
     
     \end{definition}
     
-    \begin{definition}{Steady-State/Equilibrium Vector$^{[]}$ LAY TANASE}
+    \begin{definition}{Steady-State/Equilibrium Vector$^{[5], [8]}$}
     
     \noindent
     \textup{The steady-state or equilibrium vector is the vector such that $$P \Vec{x} = \Vec{x}$$ which is the eigenvector corresponding to an eigenvalue of $1$ for the regular stochastic matrix $P$. This vector $\Vec{x}$ represents the convergence of the probabilities upon repeated multiplications (tending towards infinity) by $P$ given any initial state $x_0$.}
     
     \end{definition}
     
-    \begin{definition}{Dangling Node$^{[]}$ SHUM}
+    \begin{definition}{Dangling Node$^{[4]}$}
     
     \noindent
     \textup{A dangling node exists in a web-graph when the matrix representation of the graph has a column of all $0$s. This implies that the node does not allow a following state as no outgoing links exist.}
     
     \end{definition}
     
-    \begin{definition}{Altered Transition Matrix$^{[]}$ SHUM}
+    \begin{definition}{Altered Transition Matrix$^{[4]}$}
     
     \noindent
     \textup{In the case that a dangling node exists, it is not initially possible to construct a regular stochastic matrix from the given probabilities. To instead construct a representation of the probabilities, we replace the column of $0$s with a column of the form
@@ -156,34 +126,34 @@ Might want to combine this section with previous.
     
     \end{definition}
     
-    \begin{definition}{Irreducible Graph$^{[]}$ SHUM}
+    \begin{definition}{Irreducible Graph$^{[4]}$ }
     \noindent
-    \textup{An irreducible graph contains distinct nodes that can pairwise be reached through traversal of the web-graph. Specifically, ``a graph is called irreducible if for any pair of distinct nodes, we can start from one of them, follow  the links in the web graph, and arrive at the other node, and vice versa.''$^{[]}$ (Shum)}
+    \textup{An irreducible graph contains distinct nodes that can pairwise be reached through traversal of the web-graph. Specifically, ``a graph is called irreducible if for any pair of distinct nodes, we can start from one of them, follow  the links in the web graph, and arrive at the other node, and vice versa.''$^{[4]}$}
     
     \end{definition}
     
-    \begin{definition}{Reducible Graph$^{[]}$ SHUM}
+    \begin{definition}{Reducible Graph$^{[4]}$}
 
     \noindent
-    \textup{According to Shum, a reducible graph is any graph that is ``not irreducible'' as defined above.$^{[]}$ A reducible graph forces the issue that the probabilities of arriving at a specific node are altered by the creation of a cycle within a subset of the web graph, preventing traversal to previous nodes despite their nonzero reachability.}
+    \textup{According to Shum, a reducible graph is any graph that is ``not irreducible'' as defined above.$^{[4]}$ A reducible graph forces the issue that the probabilities of arriving at a specific node are altered by the creation of a cycle within a subset of the web graph, preventing traversal to previous nodes despite their nonzero reachability.}
     
     \end{definition}
     
-    \begin{definition}{Damping Factor$^{[]}$ SHUM ROUSSEAU TANASE}
+    \begin{definition}{Damping Factor$^{[4], [6], [8]}$}
     
     \noindent
-    \textup{A positive constant damping factor $\beta$ chosen from $[0,1]$ is utilized for reducible graphs such that we replace the transition matrix $P$ with $ \widetilde{P}$ defining $$\widetilde{P} = \beta P + \frac{1-\beta}{n} \begin{bmatrix} 1 & 1 & \ldots & 1 \\ 1 & 1 & \ldots & 1 \\ \vdots & \vdots & \ddots & \vdots \\ 1 & 1 & \ldots & 1 \end{bmatrix}$$ where we multiply the $n \times n$ matrix of ones by the factor $\frac{1-\beta}{n}$, following Shum's definition (which is equivalent to, but expressed differently than Rousseau's and Tanase and Radu's representations).$^{[]}$ Rousseau expands on the explanation of reducible graphs as characterized by multiple characteristic polynomial roots of $\det{(\lambda I - A)} = 0$ such that $\lambda = 1$ or possessing ``other eigenvalues with modulus equal to 1''.$^{[]}$}
+    \textup{A positive constant damping factor $\beta$ chosen from $[0,1]$ is utilized for reducible graphs such that we replace the transition matrix $P$ with $ \widetilde{P}$ defining $$\widetilde{P} = \beta P + \frac{1-\beta}{n} \begin{bmatrix} 1 & 1 & \ldots & 1 \\ 1 & 1 & \ldots & 1 \\ \vdots & \vdots & \ddots & \vdots \\ 1 & 1 & \ldots & 1 \end{bmatrix}$$ where we multiply the $n \times n$ matrix of ones by the factor $\frac{1-\beta}{n}$, following Shum's definition (which is equivalent to, but expressed differently than Rousseau's and Tanase's, et al. representations).$^{[4, 6, 8]}$ Rousseau expands on the explanation of reducible graphs as characterized by multiple characteristic polynomial roots of $\det{(\lambda I - A)} = 0$ such that $\lambda = 1$ or possessing ``other eigenvalues with modulus equal to 1''.$^{[6]}$}
     
     \end{definition}
     
-    \begin{definition}{Markov Chain$^{[]}$ ROUSSEAU WOLFRAMMARKOVCHAIN}
+    \begin{definition}{Markov Chain$^{[1], [6]}$}
     
     \noindent
-    \textup{A Markov chain, or a Markov chain process, is the iterative method of constructing a sequence of independent future state prediction data given initial input in the form of an $n$-term state vector $\Vec{x}_0$ and an $n \times n$ stochastic matrix $P$. Each prediction $\Vec{x}_{n+1}$, given $\Vec{x}_n$, is found through the matrix multiplication $A\Vec{x}_n$. Given a stochastic matrix, it is possible to create an altered or dampened stochastic matrix such that the adjusted matrix is regular.}
+    \textup{A Markov chain, or a Markov chain process, is the iterative method of constructing a sequence of independent future state prediction data given initial input in the form of an $n$-term state vector $\Vec{x}_0$ and an $n \times n$ stochastic matrix $P$. Each prediction $\Vec{x}_{n+1}$, given $\Vec{x}_n$, is found through the matrix-vector multiplication $A\Vec{x}_n$. Given a stochastic matrix, it is possible to create an altered or dampened stochastic matrix such that the adjusted matrix is regular.}
     \end{definition}
     
     \subsection{Theorems}
-    \begin{theorem}{Perron-Frobenius Theorem$^{[]}$ TANASE}
+    \begin{theorem}{Perron-Frobenius Theorem$^{[8]}$}
     
     \noindent
     \textup{The Perron-Frobenius Theorem states that given a positive, column stochastic matrix $M$, the following three properties are satisfied:
@@ -192,27 +162,27 @@ Might want to combine this section with previous.
         \item 1 is the largest eigenvalue; all the other eigenvalues have absolute value smaller than 1.
         \item The eigenvectors corresponding to the eigenvalue 1 have either only positive entries or only negative entries. In particular, for the eigenvalue 1, there exists a unique eigenvector with the sum of its entries equal to 1.
     \end{enumerate}
-    as stated in Tanase and Radu's article.$^{[]}$}
+    as stated in Tanase, et al.$^{[8]}$}
     \end{theorem}
     
-    \begin{theorem}{Power Method Convergence Theorem$^{[]}$ TANASE}
+    \begin{theorem}{Power Method Convergence Theorem$^{[8]}$}
     
     \noindent
-    \textup{The Power Method Convergence Theorem states that given a positive, column stochastic $n \times n$ matrix $M$, we denote $\Vec{v}^*$ as its probabilistic eigenvector corresponding to the eigenvalue 1. If we then take $\Vec{z}$ as a column vector with all entries equal to $\frac{1}{n}$, the sequence $\Vec{z}, M\Vec{z}, \ldots, M^k\Vec{z}$ converges to the vector $\Vec{v}^*$. The above definition was stated in Tanase and Radu's article.$^{[]}$ TANASE AND RADU}
+    \textup{The Power Method Convergence Theorem states that given a positive, column stochastic $n \times n$ matrix $M$, we denote $\Vec{v}^*$ as its probabilistic eigenvector corresponding to the eigenvalue 1. If we then take $\Vec{z}$ as a column vector with all entries equal to $\frac{1}{n}$, the sequence $\Vec{z}, M\Vec{z}, \ldots, M^k\Vec{z}$ converges to the vector $\Vec{v}^*$. The above definition was stated in Tanase, et al.$^{[8]}$}
     \end{theorem}
     
-\section{Page-Rank Algorithm}
-    This section describes the basis for the stochastic model characterized by standard Page-Rank algorithms. In addition, the material in this section describes our implementation of these techniques, encapsulated in our function definition $rank(ranks)$, which takes in as input a list of links emanating from each node represented as a 2-dimensional list, and outputs a single, ordered list of rankings. This algorithm will focus largely on the computation and construction of the Markov chain algorithm for Page-Rank. For a more probabilistic approach refer to Rousseau's consideration of conditional probabilities and their effects.$^{[]}$
+\section{PageRank Algorithm}
+    This section describes the basis for the stochastic model characterized by standard PageRank algorithms. In addition, the material in this section describes our implementation of these techniques, encapsulated in our Python function definition $rank(ranks)$, which takes in as input a list of links emanating from each node represented as a 2-dimensional list, and outputs a single, ordered list of rankings. This algorithm will focus largely on the computation and construction of the Markov chain algorithm for PageRank. For a more probabilistic approach refer to Rousseau's consideration of conditional probabilities and their effects.$^{[6]}$
     
     \subsection{Adjacency Matrix Construction and Dangling Nodes}
-    Given an adjacency list, effectively an array with a list of connected nodes, we must construct a transition matrix to represent the web graph that the links define. In a simple Page-Rank algorithm, given a set of directed edges emanating from a single node, we define the probability of choosing any one of the emanating edges to be equal to the probability of choosing any other emanating edge. Therefore, for a basic case, we guarantee that the sum of the entries in any column equals 1 and that all the entries are non-negative. Thus, following Shum's algorithm example, we define an $n \times n$ matrix $P$ with entries in row $i$ and column $j$ as
+    Given an adjacency list, effectively an array with a list of connected nodes, we must construct a transition matrix to represent the web graph that the links define. In a simple PageRank algorithm, given a set of directed edges emanating from a single node, we define the probability of choosing any one of the emanating edges to be equal to the probability of choosing any other emanating edge. Therefore, for a basic case with at least one directed edge from each node, we guarantee that the sum of the entries in any column equals 1 and that all the entries are non-negative. Thus, following Shum's algorithm example, we define an $n \times n$ matrix $P$ with entries in row $i$ and column $j$ as
     \[ P_{ij} =
     \begin{cases} 
       \frac{1}{C(j)} & \text{if there is a link from $j$ to $i$} \\
       0 & \text{in all other cases}
    \end{cases}
     \]
-    where we define $C(j)$ to be the number of total outgoing edges from node $j$.$^{[]}$ However, we come upon an issue in the case of a dangling node. If a dangling node exists in an adjacency list, it is impossible to create a normal stochastic matrix without alteration, as a column of 0s does not allow for the formation of a normal stochastic matrix as the sum of the elements in the column never equals 1. Thus, again following Shum's example, in the case that we come across columns of 0s in our transition matrix $P$ representation, we replace the column of 0s with a column of the form $\begin{bmatrix} \frac{1}{n} \\ \frac{1}{n} \\ \vdots \\ \frac{1}{n} \end{bmatrix}$ so as to define that a random node will be picked after reaching a node with no emanating edges. We define this matrix to have entries of the form
+    where we define $C(j)$ to be the number of total outgoing edges from node $j$.$^{[4]}$ However, we come upon an issue in the case of a dangling node. If a dangling node exists in an adjacency list, it is impossible to create a normal stochastic matrix without alteration, as a column of 0s does not allow for the formation of a normal stochastic matrix as the sum of the elements in the column never equals 1. Thus, again following Shum's example, in the case that we come across columns of 0s in our transition matrix $P$ representation, we replace the column of 0s with a column of the form $\begin{bmatrix} \frac{1}{n} \\ \frac{1}{n} \\ \vdots \\ \frac{1}{n} \end{bmatrix}$ so as to define that a random node will be picked after reaching a node with no emanating edges.$^{[4]}$ We define this matrix to have entries of the form
     \[ P_{ij} =
     \begin{cases} 
       \frac{1}{C(j)} & \text{if there is a link from $j$ to $i$} \\
@@ -220,10 +190,10 @@ Might want to combine this section with previous.
       0 & \text{in all other cases}
    \end{cases}
     \]
-    with $C(j)$ and $n$ as defined previously.
-    
+    with $C(j)$ and $n$ as defined previously.$^{[4]}$
+    \\\\
     \noindent
-    Now, let us consider the implementation of this algorithmic idea in our code. First, we must initialize the size of the matrix to be $n \times n$, where $n$ is the number of nodes. We access this by taking the length of the input vector $ranks$, which has a list of connected nodes for every node, so it has $n$ elements. Now, we case on whether each node is a dangling node or not. If the node is dangling, we set each element in the column to have probability $\frac{1}{n}$. Otherwise, we construct each element of the matrix to have probability $\frac{1}{C(j)}$ where $C(j)$ is the number of elements that one node is connected to. From this, we use the numpy matrix function to construct the matrix given these values as entries for future compatability with numpy.
+    Now, let us consider the implementation of this algorithmic idea in our code. First, we must initialize the size of the matrix to be $n \times n$, where $n$ is the number of nodes. We access this by taking the length of the input vector $ranks$, which has a list of connected nodes for every node, so it has $n$ elements. Now, we case on whether each node is a dangling node or not. If the node is dangling, we set each element in the column to have probability $\frac{1}{n}$. Otherwise, we construct each element of the matrix to have probability $\frac{1}{C(j)}$ where $C(j)$ is the number of elements that node $j$ is directed to. From this, we use the numpy matrix function to construct the matrix given these values as entries for future compatibility with numpy.
     
     \begin{center}
         \includegraphics[scale=.6]{snip1}
@@ -233,13 +203,13 @@ Might want to combine this section with previous.
     \subsection{General Solution}
    
     Our generic solution then uses the Power Method Convergence Theorem to compute a close approximation to the steady-state vector that defines the ranks. As repeated multiplications by the matrix $P$ to an $n$-valued vector with terms equal to $1$ approaches an eigenvector for $\lambda = 1$, we see that a steady-state vector is approached, which is our goal. This resultant steady-state vector then defines the output rankings based on its elements.
-    
+    \\\\
     \noindent
-    In code, this process is written as a loop iterating through repeated multiplications and terminating when equality is achieved, or after 1000 iterations of the loop are completed, which, as shown above, is likely to be effective for sparse matrices, as these matrices quickly converge on multiplication by a defining vector, as Tanase and Radu note.$^{[]}$
+    In code, this process is written as a loop iterating through repeated multiplications and terminating when equality is achieved, or after 1000 iterations of the loop are completed, which, as shown above, is likely to be effective for sparse matrices, as these matrices quickly converge on multiplication by a defining vector, as Tanase et al.$^{[8]}$ A limit of 1000 iterations was chosen to limit runtime while still providing precise output.
     \begin{center}
         \includegraphics[scale=.6]{snip2}
     \end{center}
-    Following this process, we clean our resultant vector such that the indices (and thus, nodes) are ranked in descending order, with the highest ranked node occurring first in the output vector and the lowest ranked node occurring last. Finally, we return the resulting output, our ranked list of nodes.
+    Following this process, we clean our resultant vector such that the indices (and thus, nodes) are ranked in descending order, with the highest ranked node occurring first in the output vector and the lowest ranked node occurring last. Finally, we return the resulting output, our ranked list of nodes. 
     
     \begin{center}
         \includegraphics[scale=.6]{snip3}
@@ -250,98 +220,72 @@ Might want to combine this section with previous.
     $$
     M = \beta P + \frac{1-\beta}{n} \begin{bmatrix} 1 & 1 & \ldots & 1 \\ 1 & 1 & \ldots & 1 \\ \vdots & \vdots & \ddots & \vdots \\ 1 & 1 & \ldots & 1 \end{bmatrix}
     $$
-    This also solves issues regarding repeated characteristic polynomial roots for $\lambda = 1$ or the possibility of the presence of multiple eigenvalues with modulus equal to 1, as Rousseau notes.$^{[]}$ We may also use this technique of damping in general, not just on reducible graphs to incorporate randomness into the probabilistic model.$^{[]}$ TANASE and RADU
-    
+    This also solves issues regarding repeated characteristic polynomial roots for $\lambda = 1$ or the possibility of the presence of multiple eigenvalues with modulus equal to 1, as Rousseau notes.$^{[6]}$ We may also use this technique of damping in general, not just on reducible graphs to incorporate randomness into the probabilistic model.$^{[8]}$
+    \\\\
     \noindent
-    In our algorithm, we follow this process exactly, defining an all-ones matrix, a damping factor, and then redefining our matrix $M$ with the damping factor specified. From this, we proceed to the general solution as defined previously.
+    In our algorithm, we follow this process exactly, defining an all-ones matrix, a damping factor, and then redefining our matrix $M$ with the damping factor specified according to the equation above. From this, we proceed to the general solution as defined previously in Section 3.2.
     \begin{center}
         \includegraphics[scale=.5]{snip1A}
     \end{center}
     
-\section{Working Examples}
-    Let us consider a subset of working examples and defining behavior for the Markov chain model implemented in the previous section. The following examples will touch on some of the major points defined, first calculating the expected result, and then describing intermediate and returned results from the algorithm.
-    
-    \begin{enumerate}
-        \item Let us consider the web graph with a damping factor of 1: 
-        $$
-        \begin{tikzcd}[column sep=scriptsize]
-            A \arrow[dr] \arrow[rr]{}
-            & & B \arrow[ll] \\
-            & C \arrow[ur] \arrow[ul]
-        \end{tikzcd}
-        $$
-        
-        We input the adjacency list of connected edges of the form $\text{adjList} = [[1, 2],[0],[0, 1]]$ into our algorithm, with 0 (and index 0) corresponding to node $A$, 1 (and index 1) corresponding to node $B$, 2 (and index 2) corresponding to node $C$. The algorithm output will be described following the expected result by computation.
-        
-        Considering the computation by hand, from this representation, we may construct the adjacency matrix $P$ as follows:
-        \begin{align*}
-            P = \begin{bmatrix} 0 & 1 & .5 \\ .5 & 0 & .5 \\ .5 & 0 & 0 \end{bmatrix}
-        \end{align*}
-        
-        By calculation, a resulting eigenvector with a column sum equal to 1 for $\lambda = 1$ is $$\vec{r} = \begin{bmatrix} r(A) \\ r(B) \\ r(C) \end{bmatrix} = \begin{bmatrix} .444 \\ .333 \\ .222 \end{bmatrix}$$
-        Thus, the expected output is a ranking $A > B > C$ based on the eigenvector values.
-        
-        Now, returning to our algorithm, intermediately, in constructing an eigenvector in our algorithm, we observe that $$\vec{v}  = \begin{bmatrix} 1.33333333 \\ 1 \\ 0.66666667 \end{bmatrix}$$
-        
-        Now, observe that 
-        \begin{align*}
-            \frac{1}{1.33333333 + 1 + 0.66666667}(\vec{v}) = \begin{bmatrix} .444 \\ .333 \\ .222  \end{bmatrix} = \begin{bmatrix} r(A) \\ r(B) \\ r(C)  \end{bmatrix}
-        \end{align*}
-        
-        Indeed, as expected, our algorithm returns as output $[0, 1, 2]$, meaning that $A$ has the highest rank, $B$ has the middle rank, $C$ has the lowest rank. Thus, our output matches the expected value of the calculation.
-        
-        \item Let us consider the following web graph with a damping factor of 1: 
-        $$
-        \begin{tikzcd}
-            A \arrow[r] \arrow[d]
-            & B \arrow[l] \\
-            C 
-            & D \arrow[l] \arrow[u]
-        \end{tikzcd}
-        $$
-        
-        We input the adjacency list of connected edges of the form $\text{adjList} = [[1, 2],[0],[],[1, 2]]$ into our algorithm, with 0 (and index 0) corresponding to node $A$, 1 (and index 1) corresponding to node $B$, 2 (and index 2) corresponding to node $C$, and 3 (and index 3) corresponding to node $D$. The algorithm output will be described following the expected result by computation.
-        
-        Considering the computation by hand, from this representation, we may construct the adjacency matrix $P$ as follows:
-        \begin{align*}
-            P = \begin{bmatrix} 0 & 1 & 0 & 0 \\ .5 & 0 & 0 & .5 \\ .5 & 0 & 0 & .5 \\  0 & 0 & 0 & 0\end{bmatrix}
-        \end{align*}
-        It is easily observable that the adjacency matrix $P$ has a dangling node, as represented by the column of 0s. Thus, we construct the altered transition matrix:
-        \begin{align*}
-            \widetilde{P} = \begin{bmatrix} 0 & 1 & .25 & 0 \\ .5 & 0 & .25 & .5 \\ .5 & 0 & .25 & .5 \\  0 & 0 & .25 & 0\end{bmatrix}
-        \end{align*}
-        By calculation, a resulting eigenvector with a column sum equal to 1 for $\lambda = 1$ is $$\vec{r} = \begin{bmatrix} r(A) \\ r(B) \\ r(C) \\ r(D) \end{bmatrix} = \begin{bmatrix} .357 \\ .286 \\ .286 \\.071 \end{bmatrix}$$
-        Thus, the expected output is $A > B \geq C > D$, with $B$ and $C$ possibly switched in the output ordering based on their equivalent value.
-        
-        Now, returning to our algorithm, intermediately, in constructing an eigenvector in our algorithm, we observe that $$\vec{v}  = \begin{bmatrix} 1.42857143 \\ 1.14285714 \\ 1.14285714 \\ 0.28571429 \end{bmatrix}$$
-        
-        Now, observe that 
-        \begin{align*}
-            \frac{1}{1.42857143 + 1.14285714 + 1.14285714 + 0.28571429}(\vec{v}) = \begin{bmatrix} .357 \\ .286 \\ .286 \\.071 \end{bmatrix} = \begin{bmatrix} r(A) \\ r(C) \\ r(B) \\ r(D) \end{bmatrix}
-        \end{align*}
-        
-        Indeed, as expected, our algorithm returns as output $[0, 2, 1, 3]$, meaning that $A$ has the highest rank, $C$ has the second highest rank, $B$ has the second lowest rank, and that $D$ has the lowest rank. Thus, our output matches the expected value apart from the ordering of $B$ and $C$, which is accounted for and noted in the calculation above.
-    \end{enumerate}
-
+\section{Example}
+    Let us consider a working example and defining behavior for the Markov chain model implemented in the previous section. This example will touch on some of the major points defined, first calculating the expected result, and then describing intermediate and returned results from the algorithm.
+    \\\\
     \noindent
-    The final two examples will explore the algorithmic outputs given a larger subset of sample data, and its match with expected values provided beforehand. 
-    
-    \begin{enumerate}
-        \item Let us consider the input of our adjacency list to be $[[1, 5], [2, 5], [1, 3, 5], [4], [1, 5], [2, 6], [0, 1]]$. We will consider this case with a damping factor of 1 and observe the output and compare with the expected output given in the test case. The algorithm output is $[5, 2, 1, 6, 4, 3, 0]$ which does not immediately seem to $[5, 2, 1, 6, 3, 4, 0]$; however, in observing the intermediate value for $\vec{v}$ in the algorithm, it is evident that with a damping factor of 1, nodes 3 and 4 have the same ranking value, so their order is interchangeable.
-        
-        \item Let us consider the input of our adjacency list to be $[[1,3,4],[0,2,4],[3,6],[2,4,6],[5,8], [4,6,8],$ $[0,7,9],[0,6,8],[2,9],[0,2,8]]$. We will consider this case, first with a damping factor of 1, and then with a damping factor of $.85$ and observe the outputs and compare with the expected outputs given in the test case. Indeed, the algorithm output $[2, 6, 8, 0, 3, 9, 4, 5, 7, 1]$ matches $[2, 6, 8, 0, 3, 9, 4, 5, 7, 1]$ for a damping factor of $1$, and the algorithm output $[2, 6, 8, 0, 4, 3, 9, 5, 7, 1]$ matches $[2, 6, 8, 0, 4, 3, 9, 5, 7, 1]$ with a damping factor of $.85$.
-    \end{enumerate}
+    Let us consider the following web graph with a damping factor of 1: 
+    $$
+    \begin{tikzcd}
+        A \arrow[r] \arrow[d]
+        & B \arrow[l] \\
+        C 
+        & D \arrow[l] \arrow[u]
+    \end{tikzcd}
+    $$
+    \noindent
+    We input the adjacency list of connected edges of the form $\text{adjList} = [[1, 2],[0],[],[1, 2]]$ into our algorithm, with 0 (and index 0) corresponding to node $A$, 1 (and index 1) corresponding to node $B$, 2 (and index 2) corresponding to node $C$, and 3 (and index 3) corresponding to node $D$. The algorithm output will be described following the expected result by computation.
+    \\\\
+    \noindent
+    Considering the computation by hand, from this representation, we may construct the adjacency matrix $P$ as follows:
+    \begin{align*}
+        P = \begin{bmatrix} 0 & 1 & 0 & 0 \\ .5 & 0 & 0 & .5 \\ .5 & 0 & 0 & .5 \\  0 & 0 & 0 & 0\end{bmatrix}
+    \end{align*}
+    It is easily observable that the adjacency matrix $P$ has a dangling node, as represented by the column of 0s. Thus, we construct the altered transition matrix:
+    \begin{align*}
+        \widetilde{P} = \begin{bmatrix} 0 & 1 & .25 & 0 \\ .5 & 0 & .25 & .5 \\ .5 & 0 & .25 & .5 \\  0 & 0 & .25 & 0\end{bmatrix}
+    \end{align*}
+    By calculation, a resulting eigenvector with a column sum equal to 1 for $\lambda = 1$ is $$\vec{r} = \begin{bmatrix} r(A) \\ r(B) \\ r(C) \\ r(D) \end{bmatrix} = \begin{bmatrix} .357 \\ .286 \\ .286 \\.071 \end{bmatrix}$$
+    Thus, the expected output is $A > B \geq C > D$, with $B$ and $C$ possibly switched in the output ordering based on their equivalent value.
+    \\\\
+    \noindent
+    Now, returning to our algorithm, intermediately, in constructing an eigenvector in our algorithm, we observe that $$\vec{v}  = \begin{bmatrix} 1.42857143 \\ 1.14285714 \\ 1.14285714 \\ 0.28571429 \end{bmatrix}$$
+    \noindent
+    Now, observe that 
+    \begin{align*}
+        \frac{1}{1.42857143 + 1.14285714 + 1.14285714 + 0.28571429}(\vec{v}) = \begin{bmatrix} .357 \\ .286 \\ .286 \\.071 \end{bmatrix} = \begin{bmatrix} r(A) \\ r(C) \\ r(B) \\ r(D) \end{bmatrix}
+    \end{align*}
+    \noindent
+    Indeed, as expected, our algorithm returns as output $[0, 2, 1, 3]$, meaning that $A$ has the highest rank, $C$ has the second highest rank, $B$ has the second lowest rank, and that $D$ has the lowest rank. Thus, our output matches the expected value apart from the ordering of $B$ and $C$, which is accounted for and noted in the calculation above.
+
+
 \section{Conclusion}
-
-
-
+The applications to Markov Chains and the PageRank algorithm span many fields, from Biology to Computer Science. While the implementation for PageRank described here is simple, it's efficacy demonstrates the immense power of these algorithms. While Google (and other large search engines) have moved away from such a simple model of PageRank, their underlying technology is still identical to what is demonstrated here: namely, using Markov Chains for predicting the most relevant pages. In fact, this technique can be explored further. For example, a current open research question is Hidden Markov Models, which cluster probability distributions through processes assumed to be Markov chains, but have hidden states, preventing definitive conclusions on the internal ranking of variables.$^{[9]}$ This predictive model will most definitely have a plethora of applications for many years to come.
 
 \bibliographystyle{plain}
 \bibliography{references}
 \begin{thebibliography}{4}
 
-%http://mathworld.wolfram.com/MarkovChain.html
 %https://projecteuclid.org/download/pdfview_1/euclid.ps/1208958281
+\bibitem{markovchain}
+Weisstein EW. Markov Chain. Wolfram MathWorld. http://mathworld.wolfram.com/MarkovChain.html. Accessed December 14, 2018.
+
+\bibitem{historyofpagerank}
+The History of PageRank and Iterative Searching Algorithms. Cornell University. https://blogs.cornell.edu/info2040/2017/10/25/the-history-of-pagerank-and-iterative-searching-algorithms/. Published October 25, 2017. Accessed December 14, 2018.
+
+\bibitem{myers}
+Myers DS, Wallin L, Wikström P. \textit{An Introduction to Markov Chains and Their Applications Within Finance.}
+
+\bibitem{shum}
+Shum, K. (2013). \textit{Notes on Page Rank Algorithm} (tech.). \textit{Notes on Page Rank Algorithm.} \texttt{http://home.ie.cuhk.edu.hk/\~{}wkshum/papers/pagerank.pdf}. Accessed 13 December 2018.
 
 \bibitem{lay}
 Lay, D. C., Lay, S. R., \& McDonald, J. (2016). \textit{Linear algebra and its applications}. Boston: Pearson.
@@ -349,14 +293,14 @@ Lay, D. C., Lay, S. R., \& McDonald, J. (2016). \textit{Linear algebra and its a
 \bibitem{rousseau}
 Rousseau, C. (2017, February 7). How Google works: Markov chains and eigenvalues. \textit{Klein Project Blog}. \texttt{http://blog.kleinproject.org/?p=280}. Accessed 13 December 2018.
 
-\bibitem{shum}
-Shum, K. (2013). \textit{Notes on Page Rank Algorithm} (tech.). \textit{Notes on Page Rank Algorithm.} \texttt{http://home.ie.cuhk.edu.hk/\~{}wkshum/papers/pagerank.pdf}. Accessed 13 December 2018.
-
 \bibitem{stochasticmatrix}
 \textit{Stochastic Matrix}. Wolfram MathWorld. \texttt{http://mathworld.wolfram.com/StochasticMatrix.html}. Accessed 13 December 2018.
 
 \bibitem{tanase}Tanase, R., \& Radu, R. (2009). Lecture \#3: PageRank Algorithm - The Mathematics of Google Search. 
 \textit{Cornell University: College of Arts and Sciences}. Cornell University. \texttt{http://pi.math.cornell.edu/\~{}mec/Winter2009/RalucaRemus/Lecture3/lecture3.html}. Accessed 13 December 2018.
+
+\bibitem{jurafsky}
+Jurafsky, D., \& Martin, J. H. (2011). \textit{Hidden Markov Models} (tech.). \textit{Hidden Markov Models}.
 
 \end{thebibliography}
 
