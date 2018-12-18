@@ -1,7 +1,7 @@
 ## Markov Chains
 
 ### Description
-*Carnegie Mellon University, 21-241 Matrices and Linear Transformations, Final Project*
+#### *Carnegie Mellon University, 21-241 Matrices and Linear Transformations, Final Project*
 Markov Chains are collections of random variables that have the explict property that given the present, the future is conditionally independent of the past. Specifically this project explores Markov Chains and its implentation in the PageRank algorithm.
 
 
